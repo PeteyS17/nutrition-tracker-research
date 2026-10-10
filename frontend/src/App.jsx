@@ -36,7 +36,7 @@ function App() {
 
   return (
     <main>
-      <h1>🌱 Mini Nutrition Tracker</h1>
+      <h1> 🌱Mini Nutrition Tracker</h1>
       <p>Track the foods you eat and your daily calories.</p>
 
       <form onSubmit={addFood}>
