@@ -3,6 +3,10 @@ import { useState } from 'react'
 import './App.css'
 
 function App() {
+const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [loggedInUser, setLoggedInUser] = useState(null)
+
   const [foodName, setFoodName] = useState('')
   const [calories, setCalories] = useState('')
   const [protein, setProtein] = useState('')
@@ -10,12 +14,39 @@ function App() {
   const [fat, setFat] = useState('')
   const [foods, setFoods] = useState([])
 
+function handleLogin(event) {
+    event.preventDefault()
+
+    if (!username.trim() || !password.trim()) {
+      return
+    }
+
+    
+    setLoggedInUser(username.trim())
+    setPassword('')
+  }
+
+  function handleLogout() {
+    setLoggedInUser(null)
+    setUsername('')
+    setPassword('')
+    setFoods([])
+  }
+
   function addFood(event) {
     event.preventDefault()
 
     const values = [calories, protein, carbs, fat]
 
-    if (!foodName.trim() || calories === '' || Number(calories) < 0) {
+   if (
+      !foodName.trim() ||
+      values.some(
+        (value) =>
+          value === '' ||
+          !Number.isFinite(Number(value)) ||
+          Number(value) < 0
+      )
+    ) {
       return
     }
 
@@ -49,11 +80,49 @@ function App() {
     }),
     { calories: 0, protein: 0, carbs: 0, fat: 0 }
   )
+  if (!loggedInUser) {
+    return (
+      <main>
+        <h1>🌱 Mini Nutrition Tracker</h1>
+        <h2>Demo Login</h2>
+        <p>Enter any username and password to explore the app.</p>
+
+        <form onSubmit={handleLogin}>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+          />
+
+          <button type="submit">Login</button>
+        </form>
+
+      
+      </main>
+    )
+  }
 
   return (
     <main>
       <h1> 🌱Mini Nutrition Tracker</h1>
-      <p>Track the foods you eat and your daily calories.</p>
+      <p>Welcome, {loggedInUser}!</p>
+
+      <button type="button" onClick={handleLogout}>
+        Logout
+      </button>
+
+      <h2>Add Food</h2>
+
 
       <form onSubmit={addFood}>
         <input
