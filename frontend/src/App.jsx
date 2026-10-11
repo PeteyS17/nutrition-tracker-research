@@ -5,10 +5,15 @@ import './App.css'
 function App() {
   const [foodName, setFoodName] = useState('')
   const [calories, setCalories] = useState('')
+  const [protein, setProtein] = useState('')
+  const [carbs, setCarbs] = useState('')
+  const [fat, setFat] = useState('')
   const [foods, setFoods] = useState([])
 
   function addFood(event) {
     event.preventDefault()
+
+    const values = [calories, protein, carbs, fat]
 
     if (!foodName.trim() || calories === '' || Number(calories) < 0) {
       return
@@ -18,20 +23,31 @@ function App() {
       id: crypto.randomUUID(),
       name: foodName.trim(),
       calories: Number(calories),
+      protein: Number(protein),
+      carbs: Number(carbs),
+      fat: Number(fat),
     }
 
     setFoods([...foods, newFood])
     setFoodName('')
     setCalories('')
+    setProtein('')
+    setCarbs('')
+    setFat('')
   }
 
   function deleteFood(id) {
     setFoods(foods.filter((food) => food.id !== id))
   }
 
-  const totalCalories = foods.reduce(
-    (total, food) => total + food.calories,
-    0
+ const totals = foods.reduce(
+    (total, food) => ({
+      calories: total.calories + food.calories,
+      protein: total.protein + food.protein,
+      carbs: total.carbs + food.carbs,
+      fat: total.fat + food.fat,
+    }),
+    { calories: 0, protein: 0, carbs: 0, fat: 0 }
   )
 
   return (
@@ -57,6 +73,36 @@ function App() {
           required
         />
 
+        <input
+          type="number"
+          placeholder="Protein (g)"
+          min="0"
+          step="any"
+          value={protein}
+          onChange={(event) => setProtein(event.target.value)}
+          required
+        />
+
+        <input
+          type="number"
+          placeholder="Carbs (g)"
+          min="0"
+          step="any"
+          value={carbs}
+          onChange={(event) => setCarbs(event.target.value)}
+          required
+        />
+
+        <input
+          type="number"
+          placeholder="Fat (g)"
+          min="0"
+          step="any"
+          value={fat}
+          onChange={(event) => setFat(event.target.value)}
+          required
+        />
+
         <button type="submit">Add Food</button>
       </form>
 
@@ -68,8 +114,12 @@ function App() {
         <ul>
           {foods.map((food) => (
             <li key={food.id}>
-              {food.name} — {food.calories} calories
-              <button onClick={() => deleteFood(food.id)}>
+              <strong>{food.name}</strong> — {food.calories} cal,
+              {' '}{food.protein}g protein,
+              {' '}{food.carbs}g carbs,
+              {' '}{food.fat}g fat
+              {' '}
+              <button type="button" onClick={() => deleteFood(food.id)}>
                 Delete
               </button>
             </li>
@@ -77,7 +127,11 @@ function App() {
         </ul>
       )}
 
-      <h2>Total Calories: {totalCalories}</h2>
+      <h2>Daily Totals</h2>
+      <p>Calories: {totals.calories}</p>
+      <p>Protein: {totals.protein} g</p>
+      <p>Carbohydrates: {totals.carbs} g</p>
+      <p>Fat: {totals.fat} g</p>
     </main>
   )
 }
