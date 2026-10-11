@@ -146,6 +146,41 @@ function handleLogin(event) {
       <button type="button" onClick={handleLogout}>
         Logout
       </button>
+      <h2>Macronutrient Chart</h2>
+<p>Compare your total protein, carbs, and fat intake.</p>
+
+<div className="chart">
+  {[
+    { label: 'Protein', value: totals.protein, color: '#4caf70' },
+    { label: 'Carbs', value: totals.carbs, color: '#e7ad42' },
+    { label: 'Fat', value: totals.fat, color: '#6588df' },
+  ].map((nutrient) => {
+    const maxValue = Math.max(
+      totals.protein,
+      totals.carbs,
+      totals.fat,
+      1
+    )
+
+    return (
+      <div className="chart-row" key={nutrient.label}>
+        <span>{nutrient.label}</span>
+
+        <div className="chart-track">
+          <div
+            className="chart-bar"
+            style={{
+              width: `${(nutrient.value / maxValue) * 100}%`,
+              backgroundColor: nutrient.color,
+            }}
+          />
+        </div>
+
+        <strong>{nutrient.value} g</strong>
+      </div>
+    )
+  })}
+</div>
       <h2>Search Foods</h2>
 
 <input
@@ -261,41 +296,9 @@ function handleLogin(event) {
       <p>Carbohydrates: {totals.carbs} g</p>
       <p>Fat: {totals.fat} g</p>
     
-    <h2>Macronutrient Chart</h2>
-<p>Compare your total protein, carbs, and fat intake.</p>
+    
+  
 
-<div className="chart">
-  {[
-    { label: 'Protein', value: totals.protein, color: '#4caf70' },
-    { label: 'Carbs', value: totals.carbs, color: '#e7ad42' },
-    { label: 'Fat', value: totals.fat, color: '#6588df' },
-  ].map((nutrient) => {
-    const maxValue = Math.max(
-      totals.protein,
-      totals.carbs,
-      totals.fat,
-      1
-    )
-
-    return (
-      <div className="chart-row" key={nutrient.label}>
-        <span>{nutrient.label}</span>
-
-        <div className="chart-track">
-          <div
-            className="chart-bar"
-            style={{
-              width: `${(nutrient.value / maxValue) * 100}%`,
-              backgroundColor: nutrient.color,
-            }}
-          />
-        </div>
-
-        <strong>{nutrient.value} g</strong>
-      </div>
-    )
-  })}
-</div>
 </main>
   )
 }
